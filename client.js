@@ -3,7 +3,7 @@ let net = require('net');
 let io = require('socket.io-client');
 let request = require('request');
 var prompt = require('prompt');
-const serverHost = "http://120.24.169.84";
+const serverHost = "http://service.sowdf.com";
 //const serverHost = "http://localhost";
 const serverPort = "80";
 
@@ -48,7 +48,7 @@ class Client{
             if(code === 100){
                 let {host} = result;
                 this.connect(host,key);
-                console.log(`您的访问域名：http://${host}.sowdf.com:3737`);
+                console.log(`您的访问域名：http://${host}.sowdf.com`);
             }
             return console.log(message);
         })
