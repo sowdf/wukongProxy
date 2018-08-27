@@ -3,7 +3,8 @@ let net = require('net');
 let io = require('socket.io-client');
 let request = require('request');
 var prompt = require('prompt');
-const serverHost = "120.24.169.84";
+const serverHost = "http://120.24.169.84";
+//const serverHost = "http://localhost";
 const serverPort = "3839";
 
 //
@@ -27,11 +28,7 @@ prompt.get([{
     // Log the results.
     //
     new Client(result);
-    console.log('Command-line input received:');
-    console.log('  username: ' + result.username);
-    console.log('  password: ' + result.password);
     return true;
-
 });
 
 
@@ -51,6 +48,7 @@ class Client{
             if(code === 100){
                 let {host} = result;
                 this.connect(host,key);
+                console.log(`您的访问域名：http://${host}.sowdf.com:3737`);
             }
             return console.log(message);
         })
