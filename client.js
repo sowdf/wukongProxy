@@ -5,7 +5,7 @@ let request = require('request');
 var prompt = require('prompt');
 const serverHost = "http://120.24.169.84";
 //const serverHost = "http://localhost";
-const serverPort = "3839";
+const serverPort = "80";
 
 //
 // Start the prompt
