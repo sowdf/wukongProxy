@@ -48,7 +48,7 @@ class Client{
             if(code === 100){
                 let {host} = result;
                 this.connect(host,key);
-                console.log(`您的访问域名：http://${host}.sowdf.com`);
+                return console.log(`您的访问域名：http://${host}.sowdf.com`);
             }
             return console.log(message);
         })
@@ -57,7 +57,9 @@ class Client{
         //var socket = io('http://120.24.169.84:3838');
         let socket = io(`${serverHost}:${serverPort}?host=${host}&key=${key}`);
         let client = {};
-
+        socket.on('disconnect', () => {
+            console.log('断开');
+        });
         socket.on('connect', () => {
             console.log('socket.io server connected');
 
@@ -88,12 +90,14 @@ class Client{
                         })
                     });
                     clientFree.on('error', err => {
-                        console.log(err);
                         socket.emit('message/end', {
                             name: name,
                             buffer: null
                         })
                     });
+                /*    clientFree.on('disconnect', err => {
+                        console.log('断开');
+                    });*/
                 }
             });
         });
