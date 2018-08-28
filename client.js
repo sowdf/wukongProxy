@@ -44,7 +44,6 @@ class Client{
                 console.log(err);
                 return false;
             }
-            console.log(body);
             let {code,result,message} = JSON.parse(body);
             if(code === 100){
                 let {host} = result;
