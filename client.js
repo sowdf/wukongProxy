@@ -4,6 +4,7 @@ let io = require('socket.io-client');
 let request = require('request');
 var prompt = require('prompt');
 const serverHost = "http://service.sowdf.com";
+const host = 'http://www.sowdf.com';
 //const serverHost = "http://localhost";
 const serverPort = "80";
 
@@ -38,7 +39,7 @@ class Client{
         this.getHost(key);
     }
     getHost(key){
-        request.get(serverHost + ':4001/client/getHost?key='+key,(err,response,body)=>{
+        request.get(`${host}/client/getHost?key=${key}`,(err,response,body)=>{
             if(err){
                 console.log(err);
                 return false;
