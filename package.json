@@ -1,5 +1,5 @@
 {
-  "name": "wukongProxy",
+  "name": "wukongproxy",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git@code.aliyun.com:229555644/proxyClient.git"
   },
-  "author": "",
+  "author": "sowdf",
   "license": "ISC",
   "dependencies": {
     "prompt": "^1.0.0",
