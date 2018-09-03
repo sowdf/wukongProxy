@@ -22,7 +22,7 @@ prompt.get([{
     required: true
 }, {
     name: 'key',
-    message: '请输入您的key ， 如果没有请打http://wwww.baidu.com 注册获取',
+    message: '请输入您的key ， 如果没有请打http://wwww.sowdf.com 注册获取',
     required: true,
 }], function (err, result) {
     //

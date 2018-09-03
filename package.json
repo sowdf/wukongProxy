@@ -1,6 +1,6 @@
 {
-  "name": "wukongproxy",
-  "version": "1.0.0",
+  "name": "wkproxy",
+  "version": "1.0.4",
   "description": "",
   "main": "main.js",
   "scripts": {
