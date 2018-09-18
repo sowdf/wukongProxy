@@ -55,14 +55,13 @@ class Client{
     }
     connect(host,key){
         //var socket = io('http://120.24.169.84:3838');
-        let socket = io(`${serverHost}:${serverPort}?host=${host}&key=${key}`);
+        let socket = io(`${serverHost}:${serverPort}?host=${host}&key=${key}`, {"force new connection":true});
         let client = {};
         socket.on('disconnect', () => {
             console.log('断开');
         });
         socket.on('connect', () => {
             console.log('socket.io server connected');
-
             socket.on('message', data => {
                 let {name,buffer} = data;
                 let clientFree = client[name];
