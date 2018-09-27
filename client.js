@@ -3,8 +3,8 @@ let net = require('net');
 let io = require('socket.io-client');
 let request = require('request');
 var prompt = require('prompt');
-const serverHost = "http://service.sowdf.com";
-const host = 'http://www.sowdf.com';
+const serverHost = "http://service.wkdl.ltd";
+const host = 'http://www.wkdl.ltd';
 //const serverHost = "http://localhost";
 const serverPort = "80";
 
@@ -22,7 +22,7 @@ prompt.get([{
     required: true
 }, {
     name: 'key',
-    message: '请输入您的key ， 如果没有请打http://wwww.sowdf.com 注册获取',
+    message: '请输入您的key ， 如果没有请打http://wwww.wkdl.ltd 注册获取',
     required: true,
 }], function (err, result) {
     //
@@ -48,7 +48,7 @@ class Client{
             if(code === 100){
                 let {host} = result;
                 this.connect(host,key);
-                return console.log(`您的访问域名：http://${host}.sowdf.com`);
+                return console.log(`您的访问域名：http://${host}.wkdl.ltd`);
             }
             return console.log(message);
         })
@@ -79,19 +79,22 @@ class Client{
                     clientFree.on('data', function (buf) {
                         socket.emit('message', {
                             name: name,
-                            buffer: buf
+                            buffer: buf,
+                            host
                         })
                     });
                     clientFree.on('end', () => {
                         socket.emit('message/end', {
                             name: name,
-                            buffer: null
+                            buffer: null,
+                            host
                         })
                     });
                     clientFree.on('error', err => {
                         socket.emit('message/end', {
                             name: name,
-                            buffer: null
+                            buffer: null,
+                            host
                         })
                     });
                 /*    clientFree.on('disconnect', err => {
