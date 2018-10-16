@@ -65,6 +65,7 @@ class Client{
             socket.on('message', data => {
                 let {name,buffer} = data;
                 let clientFree = client[name];
+                console.log(data);
                 if (!name) {
                     return;
                 }
@@ -97,9 +98,9 @@ class Client{
                             host
                         })
                     });
-                /*    clientFree.on('disconnect', err => {
-                        console.log('断开');
-                    });*/
+                    /*    clientFree.on('disconnect', err => {
+                            console.log('断开');
+                        });*/
                 }
             });
         });
