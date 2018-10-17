@@ -1,12 +1,12 @@
 #!/usr/bin/env node
+const {isDev,dev,pro} = require('./config');
+const config = isDev ? dev : pro;
+let {serverHost,host,serverPort} = config;
 let net = require('net');
 let io = require('socket.io-client');
 let request = require('request');
 var prompt = require('prompt');
-const serverHost = "http://service.wkdl.ltd";
-const host = 'http://www.wkdl.ltd';
 //const serverHost = "http://localhost";
-const serverPort = "80";
 
 //
 // Start the prompt
@@ -60,12 +60,19 @@ class Client{
         socket.on('disconnect', () => {
             console.log('断开');
         });
+  /*      socket.on('message/headerEnd', (data) => {
+            console.log('浏览器告诉我结束了。。。。');
+            let {name} = data;
+            socket.emit('message/end', {
+                name: name,
+                buffer: null
+            })
+        });*/
         socket.on('connect', () => {
             console.log('socket.io server connected');
             socket.on('message', data => {
                 let {name,buffer} = data;
                 let clientFree = client[name];
-                console.log(data);
                 if (!name) {
                     return;
                 }
@@ -85,6 +92,7 @@ class Client{
                         })
                     });
                     clientFree.on('end', () => {
+                        console.log('我结束了');
                         socket.emit('message/end', {
                             name: name,
                             buffer: null,
