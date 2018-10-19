@@ -79,19 +79,21 @@ class Client{
                 if (clientFree) {
                     clientFree.write(buffer);
                 } else {
-                    clientFree = new net.Socket();
+                    clientFree = new net.Socket({
+                    });
                     clientFree.connect(this.listenPort, '127.0.0.1', function () {
                         //写到浏览器
                         clientFree.write(buffer);
                     });
                     clientFree.on('data', function (buf) {
+                        console.log(buf.toString());
                         socket.emit('message', {
                             name: name,
                             buffer: buf,
                             host
                         })
                     });
-                    clientFree.on('end', () => {
+                    clientFree.on('end', (data) => {
                         console.log('我结束了');
                         socket.emit('message/end', {
                             name: name,
@@ -100,12 +102,25 @@ class Client{
                         })
                     });
                     clientFree.on('error', err => {
+                        console.log('error');
                         socket.emit('message/end', {
                             name: name,
                             buffer: null,
                             host
                         })
                     });
+                 /*   clientFree.on('timeout', () => {
+                        console.log('timeout 超时');
+                    });
+                    clientFree.on('disconnect', () => {
+                        console.log('disconnect 断开');
+                    });
+                    clientFree.on('drain', () => {
+                        console.log('drain 断开');
+                    });
+                    clientFree.on('close', () => {
+                        console.log('断开 close');
+                    });*/
                     /*    clientFree.on('disconnect', err => {
                             console.log('断开');
                         });*/
