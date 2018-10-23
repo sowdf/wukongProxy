@@ -1,5 +1,5 @@
 module.exports= {
-    isDev : true,
+    isDev :true,
     dev : {
         serverPort : 3838,
         host : 'http://www.wkdl.ltd',

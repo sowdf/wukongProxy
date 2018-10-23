@@ -1,134 +1,68 @@
-#!/usr/bin/env node
-const {isDev,dev,pro} = require('./config');
-const config = isDev ? dev : pro;
-let {serverHost,host,serverPort} = config;
-let net = require('net');
-let io = require('socket.io-client');
-let request = require('request');
-var prompt = require('prompt');
-//const serverHost = "http://localhost";
+const net = require('net');
+const io = require('socket.io-client');
+const readlineSync = require('readline-sync');
 
-//
-// Start the prompt
-//
-prompt.start();
-
-//
-// Get two properties from the user: username and password
-//
-prompt.get([{
-    name: 'port',
-    message: '请输入您的端口号：如（8080）',
-    required: true
-}, {
-    name: 'key',
-    message: '请输入您的key ， 如果没有请打http://wwww.wkdl.ltd 注册获取',
-    required: true,
-}], function (err, result) {
-    //
-    // Log the results.
-    //
-    new Client(result);
-    return true;
-});
-
-
-class Client{
-    constructor({key,port}){
-        this.listenPort = port;
-        this.getHost(key);
-    }
-    getHost(key){
-        request.get(`${host}/client/getHost?key=${key}`,(err,response,body)=>{
-            if(err){
-                console.log(err);
-                return false;
+class Client {
+    constructor() {
+        //this.port = readlineSync.question('请输入转发的本地端口(8080):');
+        //this.token = readlineSync.question('请输入授权码(token):');
+        this.port = 8000;
+        this.socket = io('http://127.0.0.1:3838', {
+            query: {
+                token: this.token || 'lzp'
             }
-            let {code,result,message} = JSON.parse(body);
-            if(code === 100){
-                let {host} = result;
-                this.connect(host,key);
-                return console.log(`您的访问域名：http://${host}.wkdl.ltd`);
-            }
-            return console.log(message);
-        })
-    }
-    connect(host,key){
-        //var socket = io('http://120.24.169.84:3838');
-        let socket = io(`${serverHost}:${serverPort}?host=${host}&key=${key}`, {"force new connection":true});
-        let client = {};
-        socket.on('disconnect', () => {
-            console.log('断开');
         });
-  /*      socket.on('message/headerEnd', (data) => {
-            console.log('浏览器告诉我结束了。。。。');
-            let {name} = data;
-            socket.emit('message/end', {
-                name: name,
-                buffer: null
-            })
-        });*/
-        socket.on('connect', () => {
+        this.clients = {};
+    }
+
+    start() {
+
+        this.socket.on('connect', () => {
             console.log('socket.io server connected');
-            socket.on('message', data => {
-                let {name,buffer} = data;
-                let clientFree = client[name];
-                if (!name) {
-                    return;
-                }
-                if (clientFree) {
-                    clientFree.write(buffer);
-                } else {
-                    clientFree = new net.Socket({
+        });
+        this.socket.on('request', data => {
+            if (!data.addr) {
+                return;
+            }
+            let addr = data.addr;
+            if (!this.clients[addr]) {
+                this.clients[addr] = new net.Socket();
+                this.clients[addr].connect(this.port, '127.0.0.1', () => {
+                    this.clients[addr].write(data.buffer);
+                });
+
+                this.clients[addr].on('data', (buffer) => {
+                    this.socket.emit('response', {
+                        addr: addr,
+                        buffer: buffer
+                    })
+                });
+                let end = () => {
+                    this.socket.emit('response/end', {
+                        addr: addr,
+                        buffer: null
                     });
-                    clientFree.connect(this.listenPort, '127.0.0.1', function () {
-                        //写到浏览器
-                        clientFree.write(buffer);
-                    });
-                    clientFree.on('data', function (buf) {
-                        console.log(buf.toString());
-                        socket.emit('message', {
-                            name: name,
-                            buffer: buf,
-                            host
-                        })
-                    });
-                    clientFree.on('end', (data) => {
-                        console.log('我结束了');
-                        socket.emit('message/end', {
-                            name: name,
-                            buffer: null,
-                            host
-                        })
-                    });
-                    clientFree.on('error', err => {
-                        console.log('error');
-                        socket.emit('message/end', {
-                            name: name,
-                            buffer: null,
-                            host
-                        })
-                    });
-                 /*   clientFree.on('timeout', () => {
-                        console.log('timeout 超时');
-                    });
-                    clientFree.on('disconnect', () => {
-                        console.log('disconnect 断开');
-                    });
-                    clientFree.on('drain', () => {
-                        console.log('drain 断开');
-                    });
-                    clientFree.on('close', () => {
-                        console.log('断开 close');
-                    });*/
-                    /*    clientFree.on('disconnect', err => {
-                            console.log('断开');
-                        });*/
-                }
-            });
+                    if (this.clients[addr]) {
+                        delete this.clients[addr];
+                    }
+                };
+                this.clients[addr].on('end', end);
+                this.clients[addr].on('close', end);
+                this.clients[addr].on('error', end);
+            } else {
+                this.clients[addr].write(data.buffer);
+            }
+        });
+        this.socket.on('close', message => {
+            console.log(message);
+            this.socket.close();
+            process.exit(1);
+        });
+        this.socket.on('disconnect', () => {
+            this.clients = {}
         });
     }
 }
 
-
-
+let client = new Client();
+client.start();
