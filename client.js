@@ -1,22 +1,44 @@
 const net = require('net');
 const io = require('socket.io-client');
-const readlineSync = require('readline-sync');
+var prompt = require('prompt');
 
 class Client {
     constructor() {
         //this.port = readlineSync.question('请输入转发的本地端口(8080):');
         //this.token = readlineSync.question('请输入授权码(token):');
-        this.port = 8000;
-        this.socket = io('http://127.0.0.1:3838', {
+
+        prompt.start();
+        prompt.get([{
+            name: 'port',
+            message: '请输入转发的本地端口默认',
+            default : 8080,
+            required: false
+        }, {
+            name: 'token',
+            message: '请输入授权码(token) 前往 http://wwww.wkdl.ltd 注册获取',
+            required: true,
+        }], (err, result) =>{
+            console.log(result);
+            let {token,port} = result;
+            this.port = port;
+            this.token = token;
+            //new Client(result);
+            this.init();
+            return true;
+        });
+    }
+    init(){
+        this.socket = io('http://service.wkdl.ltd', {
             query: {
                 token: this.token || 'lzp'
             }
         });
         this.clients = {};
+
+        this.start();
     }
 
     start() {
-
         this.socket.on('connect', () => {
             console.log('socket.io server connected');
         });
@@ -65,4 +87,3 @@ class Client {
 }
 
 let client = new Client();
-client.start();
