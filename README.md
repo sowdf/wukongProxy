@@ -1,13 +1,13 @@
 # wukongProxy
 悟空代理  内网穿透
 
-使用环境 安装nodejs
+使用环境 安装 nodejs 版本 8.0以上
 
 npm install -g wkproxy
 
 执行 proxy
 
-输入key  如果没有key 清前往 http://www.wkdl.ltd/ 免费获取
+输入key  如果没有key 请前往 http://www.wkdl.ltd/ 免费获取
 
 填写端口 ： 8080  如果你本地启动的服务是8080   那就是8080
 
