@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const net = require('net');
 const io = require('socket.io-client');
 var prompt = require('prompt');
@@ -10,7 +9,6 @@ class Client {
     constructor() {
         //this.port = readlineSync.question('请输入转发的本地端口(8080):');
         //this.token = readlineSync.question('请输入授权码(token):');
-
         this.questionInit();
     }
     questionInit(successCallback){
@@ -51,9 +49,10 @@ class Client {
         })
     }
     init(){
-        this.socket = io('http://service.wkdl.ltd', {
+        this.socket = io(serverHost, {
             query: {
-                token: this.host
+                host: this.host,
+                key : this.key
             }
         });
         this.clients = {};

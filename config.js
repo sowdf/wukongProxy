@@ -3,7 +3,7 @@ const config = {
     dev: {
         serverPort: 3838,
         host: 'http://www.wkdl.ltd',
-        serverHost: 'http://127.0.0.1'
+        serverHost: 'http://127.0.0.1:3838'
     },
     pro: {
         serverPort: 80,
