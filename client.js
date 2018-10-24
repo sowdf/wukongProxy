@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const net = require('net');
 const io = require('socket.io-client');
 var prompt = require('prompt');
