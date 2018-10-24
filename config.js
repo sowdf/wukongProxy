@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
     isDev: true,
     dev: {
         serverPort: 3838,
@@ -11,3 +11,5 @@ module.exports = {
         serverHost: 'http://service.wkdl.ltd'
     }
 }
+
+module.exports = config.isDev ? config.dev : config.pro;
