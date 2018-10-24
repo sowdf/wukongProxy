@@ -1,5 +1,5 @@
 const config = {
-    isDev: true,
+    isDev: false,
     dev: {
         serverPort: 3838,
         host: 'http://www.wkdl.ltd',
