@@ -1,5 +1,5 @@
 # wukongProxy
-悟空代理
+悟空代理  内网穿透
 
 使用环境 安装nodejs
 
@@ -13,4 +13,6 @@ npm install -g wkproxy
 
 tips : 如果提示 server connected (连接成功) 表示连接成功，如果长期没有提示，请重新运行一遍
 
+
+使用场景 ： 开发好页面，需要给他人预览的时候使用 ，您只需要proxy  输入 您本地服务的端口，再输入key，您就可以获取到一个预览地址
 
