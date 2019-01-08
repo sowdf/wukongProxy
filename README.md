@@ -1,13 +1,13 @@
 # wukongProxy
-悟空代理  内网穿透
+39nat  内网穿透
 
 使用环境 安装 nodejs 版本 8.0以上
 
-npm install -g wkproxy
+npm install -g 39nat
 
-执行 proxy
+执行 nat
 
-输入key  如果没有key 请前往 http://www.wkdl.ltd/ 免费获取
+输入key  如果没有key 请前往 http://www.39nat.com/ 免费获取
 
 填写端口 ： 8080  如果你本地启动的服务是8080   那就是8080
 
