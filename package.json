@@ -1,5 +1,5 @@
 {
-  "name": "wkproxy",
+  "name": "39nat",
   "version": "1.1.2",
   "description": "",
   "main": "main.js",
@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "proxy": "client.js"
+    "nat": "client.js"
   },
   "repository": {
     "type": "git",
