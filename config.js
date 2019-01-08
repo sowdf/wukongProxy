@@ -2,7 +2,7 @@ const config = {
     isDev: false,
     dev: {
         serverPort: 3838,
-        host: 'http://www.39nat.com',
+        host: 'http://localhost:4001',
         serverHost: 'http://127.0.0.1:3838'
     },
     pro: {

@@ -20,32 +20,31 @@ class Client {
             default : 8080,
             required: false
         }, {
-            name: 'key',
-            message: '请输入授权码(key) 前往 http://www.wkdl.ltd 注册获取',
+            name: 'token',
+            message: '请输入授权码(token) 前往 http://www.39nat.com 注册获取',
             required: true,
         }], (err, result) =>{
-            let {key,port} = result;
+            let {token,port} = result;
             this.port = port;
-            this.key = key;
+            this.token = token;
             //new Client(result);
             this.getHost();
             return true;
         });
     }
     getHost(){
-        request.get(`${host}/client/getHost?key=${this.key}`,(err,response,body)=>{
+        request.get(`${host}/token/getHost?token=${this.token}`,(err,response,body)=>{
             if(err){
                 console.log(err);
                 return false;
             }
             let {code,result,message} = JSON.parse(body);
             if(code === 100){
-                let {host} = result;
-                this.host = host;
+                let {hostname} = result;
+                this.host = hostname;
                 this.init();
-                return console.log(`您的访问域名：http://${host}.wkdl.ltd`);
+                return console.log(`您的访问域名：http://${hostname}.39nat.com`);
             }
-            console.log(message);
             this.questionInit();
         })
     }
@@ -53,7 +52,7 @@ class Client {
         this.socket = io(serverHost, {
             query: {
                 host: this.host,
-                key : this.key
+                token : this.token
             }
         });
         this.clients = {};
@@ -65,6 +64,11 @@ class Client {
         this.socket.on('connect', () => {
             console.log('server connected (连接成功)');
         });
+    
+        this.socket.on('ping',(data)=>{
+        
+        });
+   
         this.socket.on('request', data => {
             if (!data.addr) {
                 return;
@@ -77,10 +81,33 @@ class Client {
                 });
 
                 this.clients[addr].on('data', (buffer) => {
+                 /*   if(!this.clients[addr].size){
+                        let response = buffer.toString();
+                        let arr = response.match(/\r\ncontent-lengt[^\r\n]+/gi);
+                        let contentLength = arr ? arr[0].split(':')[1] : '';
+                        if(contentLength){
+                            contentLength = parseInt(contentLength);
+                            if(contentLength > 50000){
+                                this.socket.emit('response', {
+                                    addr: addr,
+                                    buffer: "HTTP/1.1 200 OK\r\n\r\n 不支持大文件传输，如有需要请联系管理员！"
+                                })
+                            }
+                            this.clients[addr] && this.clients[addr].destroy();
+                            if (this.clients[addr]) {
+                                delete this.clients[addr];
+                            }
+                        }
+                     
+                    }*/
+                    this.clients[addr] && this.clients[addr].pause();
                     this.socket.emit('response', {
                         addr: addr,
                         buffer: buffer
                     })
+                    setTimeout(()=>{
+                        this.clients[addr] && this.clients[addr].resume();
+                    },100);
                 });
                 let end = () => {
                     this.socket.emit('response/end', {
@@ -93,10 +120,24 @@ class Client {
                 };
                 this.clients[addr].on('end', end);
                 this.clients[addr].on('close', end);
-                this.clients[addr].on('error', end);
+                this.clients[addr].on('error', (message)=>{
+                    console.log(message);
+                    end()
+                });
             } else {
                 this.clients[addr].write(data.buffer);
             }
+        });
+        
+        this.socket.on('response/clientEnd',(data)=>{
+            let addr = data.addr;
+            this.clients[addr] && this.clients[addr].destroy();
+            if (this.clients[addr]) {
+                delete this.clients[addr];
+            }
+        });
+        this.socket.on('error',message => {
+            console.log(message);
         });
         this.socket.on('close', message => {
             console.log(message);
