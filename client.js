@@ -100,14 +100,14 @@ class Client {
                         }
                      
                     }*/
-                    this.clients[addr] && this.clients[addr].pause();
+                    //this.clients[addr] && this.clients[addr].pause();
                     this.socket.emit('response', {
                         addr: addr,
                         buffer: buffer
                     })
-                    setTimeout(()=>{
+             /*       setTimeout(()=>{
                         this.clients[addr] && this.clients[addr].resume();
-                    },100);
+                    },100);*/
                 });
                 let end = () => {
                     this.socket.emit('response/end', {
