@@ -1,7 +1,15 @@
-# wukongProxy
+# 39nat
+
 39nat  内网穿透
 
-使用环境 安装 nodejs 版本 8.0以上
+去http://nodejs.cn/ 上下载nodejs
+
+windows :
+http://cdn.npm.taobao.org/dist/node/v10.15.1/node-v10.15.1-x64.msi
+
+macos  :
+http://cdn.npm.taobao.org/dist/node/v10.15.1/node-v10.15.1.pkg
+
 
 npm install -g 39nat
 
